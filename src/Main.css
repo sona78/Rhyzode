@@ -1,8 +1,13 @@
 .header {
   background-color: #111111;
 }
-body{
-  font-family: Ubuntu, "times new roman", times, roman, serif;
+.jumbotron {
+    margin-bottom: 0px;
+ }
+* {
+  font-family: Ubuntu;
+}
+body {
   padding-top: 56px;
 }
 .inline-block-child {
