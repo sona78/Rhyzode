@@ -22,8 +22,8 @@ class App extends React.Component {
       <Router>
           <Switch>
               <Route exact path= "/" component = {Main}/>
-              <Route exact path= "/app-entry" component = {AppEntry}/>
-              <Route exact path= "/admin" component = {Admin}/>
+              <Route exact path= "/app-entry_pwd=Rhyzode12121" component = {AppEntry}/>
+              <Route exact path= "/admin_pwd=383103" component = {Admin}/>
           </Switch>
       </Router>
       </FirebaseDatabaseProvider>
