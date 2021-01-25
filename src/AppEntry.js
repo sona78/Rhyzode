@@ -1,5 +1,5 @@
 import React from 'react';
-import { Nav, Navbar, Dropdown, DropdownButton,  Jumbotron, ListGroup,  Card, Button, Form, CardColumns } from 'react-bootstrap';
+import { Nav, Navbar, Modal, Container, Row, Col, Image, Dropdown, DropdownButton,  Jumbotron, ListGroup,  Card, Button, Form, CardColumns } from 'react-bootstrap';
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -15,13 +15,17 @@ export class AppEntry extends React.Component{
             creator: "",
             link: "",
             field: "",
+            organization: "",
             purpose: "",
             image: "",
             url: "",
-            apps: []
+            apps: [],
+            app: {},
+            showHide: false
         }
         this.handleNameChange = this.handleNameChange.bind(this)
         this.handleLinkChange = this.handleLinkChange.bind(this)
+        this.handleOrganizationChange = this.handleOrganizationChange.bind(this)
         this.handleDateChange = this.handleDateChange.bind(this)
         this.handleCreatorChange = this.handleCreatorChange.bind(this)
         this.handleFieldChange = this.handleFieldChange.bind(this)
@@ -40,6 +44,9 @@ export class AppEntry extends React.Component{
     }
     handleNameChange(e){
         this.setState({name: e.target.value})
+    }
+    handleOrganizationChange(e){
+        this.setState({organization: e})
     }
     handleLinkChange(e){
         this.setState({link: e.target.value})
@@ -62,12 +69,19 @@ export class AppEntry extends React.Component{
             this.setState(() => ({ image }));
           }
     }
+    openModal(app) {
+        this.setState({ showHide: true })
+        this.setState({ app: app})
+    }
+    closeModal(){
+        this.setState({ showHide: false})
+    }
     async addApp(){
         let IDDate = Date.now()
         //Image Storage
         let file = this.state.image
         let fileID = this.state.name + "-" + IDDate
-        if (this.state.creator !== "" && this.state.date !== "" && this.state.field !== "" && this.state.image !== "" && this.state.link !== "" && this.state.name !== "" && this.state.purpose !== ""){
+        if (this.state.creator !== "" && this.state.date !== "" && this.state.organization !== "" && this.state.field !== "" && this.state.image !== "" && this.state.link !== "" && this.state.name !== "" && this.state.purpose !== ""){
         const uploadTask = storage.ref(`/images/${fileID}`).put(file)
         await uploadTask.on('state_changed', 
             (snapShot) => {
@@ -90,6 +104,7 @@ export class AppEntry extends React.Component{
         let date =  this.state.date
         date = (date.getMonth() + 1) + "/" + date.getDate() + "/" + (date.getYear() + 1900)
         let field = this.state.field
+        let organization = this.state.organization
         let id = this.state.name + "-" + IDDate
         let image = this.state.url
         let link = this.state.link
@@ -102,6 +117,7 @@ export class AppEntry extends React.Component{
           creator,
           date,
           field,
+          organization,
           id,
           image,
           likes,
@@ -118,28 +134,34 @@ export class AppEntry extends React.Component{
         return(
             <>
             <Navbar className = "header" fixed="top" variant = "dark" expand = "lg">
-                <Navbar.Brand href="/app-entry"><div style = {{color: "#992299"}} class="child inline-block-child"><strong>&lt;/&gt;</strong></div> <div style = {{color: "#ffffff"}} class="child inline-block-child" >Rhyzode</div></Navbar.Brand>
+                <Navbar.Brand href="/app-entry_pwd=Rhyzode12121"><div style = {{color: "#992299"}} className="child inline-block-child"><strong>&lt;/&gt;</strong></div> <div style = {{color: "#ffffff"}} class="child inline-block-child" >Rhyzode</div></Navbar.Brand>
                 <Nav className="mr-auto">
                     <Nav.Link href="/">Home</Nav.Link>
                 </Nav>
             </Navbar>
             <Jumbotron style = {{backgroundColor: "#EEEEEE", marginBottom: '0px'}}>
-                <h1><center><strong><u>Enter New Applications</u></strong></center></h1> <br/>
+                <h1><center><strong><u>Enter New Project</u></strong></center></h1> <br/>
                 <Form style = {{margin:'30px'}}>
                     <Form.Group controlID = "Creator">
                         <Form.Label>Creator Name:</Form.Label>
                         <Form.Control type = "text"  value={this.state.creator} onChange = {this.handleCreatorChange}/>
                     </Form.Group>
                     <Form.Group controlID = "Name">
-                        <Form.Label>Application Name</Form.Label>
+                        <Form.Label>Project Name</Form.Label>
                         <Form.Control type = "text" value={this.state.name} onChange = {this.handleNameChange}/>
                     </Form.Group>
+                    <Form.Group controlID = "Organization">
+                        <Form.Label>Organization:</Form.Label>
+                        <DropdownButton variant = "secondary" onSelect = {this.handleOrganizationChange} title = {this.state.organization}>
+                            <Dropdown.Item eventKey="Independent">Independent</Dropdown.Item>
+                        </DropdownButton><br/>
+                    </Form.Group>
                     <Form.Group controlID = "Link">
-                        <Form.Label>Application Link (URL or Github)</Form.Label>
+                        <Form.Label>Project Link (URL or Github)</Form.Label>
                         <Form.Control type = "text" value={this.state.link} onChange = {this.handleLinkChange}/>
                     </Form.Group>
                     <Form.Group controlID = "Date">
-                        <Form.Label>Application Creation Date:</Form.Label><br/>
+                        <Form.Label>Project Creation Date:</Form.Label><br/>
                         <DatePicker selected={this.state.date} dateFormat = "MM/dd/yyyy" onChange={this.handleDateChange}/>
                     </Form.Group>
                     <Form.Group controlID = "Field">
@@ -160,7 +182,7 @@ export class AppEntry extends React.Component{
                     </Form.Group>
                     <Form.Group controlID = "Image">
                         <Form.Label>Image:</Form.Label><br/>
-                        <input type = "file" onChange = {this.handleImageChange} />
+                        <input type = "file" onChange = {this.handleImageChange} accept = "image/*"/>
                     </Form.Group>
                     <Button className="my-1" onClick = {this.addApp}>
                         Submit
@@ -172,10 +194,10 @@ export class AppEntry extends React.Component{
                     {this.state.apps.map(app => {
                         return (
                         <Card style={{ width: '18rem', height: 'auto', margin:'20px', backgroundColor: "#333333", boxShadow:"2px 2px 2px 1px rgba(0, 0, 0, 0.2)" }} key={app.id} variant = "dark" border = "light">
-                        <Card.Header style = {{textAlign: 'center', color: "#ffffff"}}><strong>{app.name}</strong></Card.Header>
-                        <Card.Img  variant="top" src= {app.image} style = {{width:'16rem', height:'auto', margin:'1rem'}} />
+                        <Card.Header onClick={() => this.openModal(app)} style = {{textAlign: 'center', color: "#ffffff"}}><strong>{app.name}</strong></Card.Header>
+                        <Card.Img onClick={() => this.openModal(app)} variant="top" src= {app.image} style = {{width:'16rem', height:'auto', margin:'1rem'}} />
                         <div>
-                        <ListGroup  style = {{margin: '5px'}}>
+                        <ListGroup onClick={() => this.openModal(app)} style = {{margin: '5px'}}>
                             <ListGroup.Item action ><strong>Field:</strong> {app.field}</ListGroup.Item>
                             <ListGroup.Item action><strong>Creator:</strong> {app.creator}</ListGroup.Item>
                         </ListGroup>
@@ -184,6 +206,44 @@ export class AppEntry extends React.Component{
                         );
                     })}
                 </CardColumns>
+
+                <Modal show={this.state.showHide} centered dialogClassName="modal-90w" size="lg"> 
+                    <Modal.Header closeButton onClick={() => this.closeModal()}>
+                    <Modal.Title>{this.state.app.name}</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Container>
+                            <center>
+                                <h4>Information about {this.state.app.name}</h4>
+                                <strong>Created by {this.state.app.creator}</strong><br/>
+                            </center>
+                            <Row>
+                                <Col>
+                                    <Image href = {this.state.app.image} target = "_blank" variant="top" src= {this.state.app.image} style = {{width:'16rem', height:'auto', margin:'1rem'}} />
+                                </Col>
+                                <Col>
+                                    <ListGroup style = {{margin: '5px'}}>
+                                        <ListGroup.Item><strong>Field: </strong>{this.state.app.field}</ListGroup.Item>
+                                        <ListGroup.Item><strong>Created on: </strong>{this.state.app.date}</ListGroup.Item>
+                                        <ListGroup.Item><strong>Description: </strong>{this.state.app.purpose}</ListGroup.Item>
+                                        <ListGroup.Item><strong>Likes❤️: </strong>{this.state.app.likes}</ListGroup.Item>
+                                        <ListGroup.Item><strong>Organization: </strong> {this.state.app.organization}</ListGroup.Item>
+                                        <br/>
+                                    </ListGroup>
+                                </Col>
+                            </Row>
+                        </Container>
+                    </Modal.Body>
+                    <Modal.Footer>
+                    <Button variant="primary" href = {"//" + this.state.app.link} target="_blank">
+                        Visit Application
+                    </Button>
+                    <Button variant="secondary" onClick={() => this.closeModal()}>
+                        Close
+                    </Button>
+                    </Modal.Footer>
+                </Modal>
+
             </Jumbotron>
             <Footer/>
             </>

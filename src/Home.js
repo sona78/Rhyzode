@@ -8,7 +8,7 @@ export class Home extends React.Component{
         super(props)
         this.state = {
             apps: [],
-            appsDisplay: [],
+            appsDisplay: this.props.appsDisplay,
             showHide : false,
             app: {}
         }
@@ -33,13 +33,16 @@ export class Home extends React.Component{
         }
         this.setState({ appsDisplay: appsDisplay})
     }
-    componentDidUpdate() {
+    componentDidUpdate(prevProps) {
         let AllApps = this.state.apps
         if(AllApps !== []){
             db.ref()
             .set({
               AllApps
             })
+        }
+        if(prevProps.appsDisplay !== this.props.appsDisplay) {
+              this.setState({appsDisplay: this.props.appsDisplay})
         }
     }
     openModal(app) {
@@ -67,8 +70,9 @@ export class Home extends React.Component{
       }; 
     render(){
         return(
-            <Jumbotron style = {{backgroundColor: "#EEEEEE", marginBottom: '0px'}}>
-                <center><h1><strong><u>Application Hub</u></strong></h1></center>
+            <>
+            <Jumbotron style = {{backgroundColor: "#EEEEEE", marginBottom: '0px'}}><br/><br/>
+                <center><h1><strong><u>Project Hub</u></strong></h1></center>
                 <CardColumns style = {{columnCount: 4, margin: '20px'}}>
                 {this.state.appsDisplay.map(app => {
                     return (
@@ -79,6 +83,7 @@ export class Home extends React.Component{
                     <ListGroup onClick={() => this.openModal(app)} style = {{margin: '5px'}}>
                         <ListGroup.Item action ><strong>Field:</strong> {app.field}</ListGroup.Item>
                         <ListGroup.Item action><strong>Creator:</strong> {app.creator}</ListGroup.Item>
+                        <ListGroup.Item action><strong>Organization: </strong> {app.organization}</ListGroup.Item>
                     </ListGroup>
                     </div>
                     
@@ -115,6 +120,7 @@ export class Home extends React.Component{
                                     <ListGroup style = {{margin: '5px'}}>
                                         <ListGroup.Item><strong>Field: </strong>{this.state.app.field}</ListGroup.Item>
                                         <ListGroup.Item><strong>Created on: </strong>{this.state.app.date}</ListGroup.Item>
+                                        <ListGroup.Item><strong>Organization: </strong> {this.state.app.organization}</ListGroup.Item>
                                         <ListGroup.Item><strong>Description: </strong>{this.state.app.purpose}</ListGroup.Item>
                                         <ListGroup.Item><strong>Likes❤️: </strong>{this.state.app.likes}</ListGroup.Item>
                                         <br/>
@@ -125,16 +131,15 @@ export class Home extends React.Component{
                     </Modal.Body>
                     <Modal.Footer>
                     <Button variant="primary" href = {"//" + this.state.app.link} target="_blank">
-                        Visit Application
+                        Visit Project
                     </Button>
                     <Button variant="secondary" onClick={() => this.closeModal()}>
                         Close
                     </Button>
                     </Modal.Footer>
                 </Modal>
-
-
             </Jumbotron>
+            </>
         );
     }
 };

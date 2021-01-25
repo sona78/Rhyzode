@@ -14,7 +14,7 @@ import{
 
 class App extends React.Component {
   componentDidMount(){
-    console.clear()
+    console.clear();
   }
   render(){
     return(
