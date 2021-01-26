@@ -83,6 +83,7 @@ export class Home extends React.Component{
         console.clear()
     }
     toggle = (app) => {
+        if(this.state.ip !== "0.0.0.0"){
         if(app.likeList.indexOf(this.state.ip) === -1){
             app.likes++
             app.likeList = app.likeList + this.state.ip + ","
@@ -100,6 +101,9 @@ export class Home extends React.Component{
         }
         this.setState({apps: apps})
         this.appDisplay();
+        }else{
+            alert("VPN Detected")
+        }
       }; 
     render(){
         return(
