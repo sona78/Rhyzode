@@ -17,6 +17,7 @@ export class AppEntry extends React.Component{
             field: "",
             organization: "",
             purpose: "",
+            likeList: "",
             image: "",
             url: "",
             apps: [],
@@ -108,6 +109,7 @@ export class AppEntry extends React.Component{
         let id = this.state.name + "-" + IDDate
         let image = this.state.url
         let link = this.state.link
+        let likeList = this.state.likeList
         let name = this.state.name
         let purpose = this.state.purpose
         let likes = 0
@@ -121,6 +123,7 @@ export class AppEntry extends React.Component{
           id,
           image,
           likes,
+          likeList,
           link,
           name,
           purpose,
@@ -190,7 +193,7 @@ export class AppEntry extends React.Component{
                 </Form>
             </Jumbotron>
             <Jumbotron style = {{backgroundColor: "#ffffff", marginBottom: "0px"}}>
-                <CardColumns style = {{columnCount: 4, margin: '20px'}}>
+                <CardColumns style = {{columnCount: 'auto', margin: '20px'}}>
                     {this.state.apps.map(app => {
                         return (
                         <Card style={{ width: '18rem', height: 'auto', margin:'20px', backgroundColor: "#333333", boxShadow:"2px 2px 2px 1px rgba(0, 0, 0, 0.2)" }} key={app.id} variant = "dark" border = "light">

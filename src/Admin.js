@@ -84,7 +84,7 @@ export class Admin extends React.Component{
             <Jumbotron style = {{backgroundColor: "#999999", marginBottom: '0px', color: "#EEEEEE"}}>
             <center><h1><strong><u>Admin</u></strong></h1></center>
             <Container>
-            <CardColumns style = {{margin: '20px'}}>
+            <CardColumns style = {{columnCount: 'auto', margin: '20px'}}>
                 {this.state.apps.map(app => {
                     return (
                     <Card style={{ width: '18rem', height: 'auto', margin:'20px', backgroundColor: "#333333", boxShadow:"2px 2px 2px 1px rgba(0, 0, 0, 0.2)" }} key={app.id} variant = "dark" border = "light">

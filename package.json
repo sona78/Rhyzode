@@ -12,6 +12,7 @@
     "bootstrap": "^4.6.0",
     "firebase": "^8.2.3",
     "moment": "^2.29.1",
+    "public-ip": "^4.0.3",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.3",
     "react-datepicker": "^3.4.1",
