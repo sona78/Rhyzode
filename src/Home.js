@@ -3,6 +3,7 @@ import {  Image, Modal, Jumbotron, ListGroup, Container, Col, Row, Card, Button,
 import {db} from './firebase.js';
 import { BsHeart, BsHeartFill } from 'react-icons/bs';
 import publicIp from "public-ip"
+import queryString from "query-string"
 
 export class Home extends React.Component{
     constructor(props){
@@ -10,6 +11,7 @@ export class Home extends React.Component{
         this.state = {
             apps: [],
             appsDisplay: this.props.appsDisplay,
+            params: queryString.parse(window.location.search),
             showHide : false,
             ip: "",
             app: {}
@@ -26,6 +28,14 @@ export class Home extends React.Component{
           snapshot.forEach(snap => {
             AllApps.push(snap.val());
           });
+          if (this.state.params.name && this.state.params.creator){
+              for (var i = 0; i < AllApps.length; i ++){
+                  if (AllApps[i].name.toLowerCase() === this.state.params.name.toLowerCase() && AllApps[i].creator.toLowerCase() === this.state.params.creator.toLowerCase()){
+                      this.openModal(AllApps[i])
+                  }
+              }
+          }
+
           this.setState({ apps: AllApps });
           this.appDisplay()
           this.getUserIP()
@@ -40,7 +50,7 @@ export class Home extends React.Component{
             
         this.setState({ip: userIP})
         
-        console.clear()
+        
     }
     appDisplay(){
         let appsDisplay = []
@@ -70,6 +80,7 @@ export class Home extends React.Component{
     }
     closeModal(){
         this.setState({ showHide: false})
+        console.clear()
     }
     toggle = (app) => {
         if(app.likeList.indexOf(this.state.ip) === -1){
